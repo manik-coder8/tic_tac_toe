@@ -3,6 +3,8 @@ let reset = document.querySelector("#reset-button");
 let newgame = document.querySelector("#new-btn");
 let msgContainer = document.querySelector(".msg-container");
 let msg = document.querySelector("#msg");
+let draw = document.querySelector("#draw");
+let count = 0;
 
 let turn0 = true; // jab 0 player ki turn hogi
 //storing winning patterns in form of 2-d array
@@ -18,6 +20,7 @@ const win = [
 ];
 
 const resetGame = () =>{
+    count = 0;
     turn0 = true;
     enableBoxed();
     msgContainer.classList.add("hide");
@@ -36,23 +39,34 @@ boxes.forEach((box)=>{
             turn0 = true;
         }
         box.disabled = true;
+        count = count +1;
 
-        checkWinner();
+        let isWinner = checkWinner();
+
+        if (count === 9 && !isWinner)
+        {
+            gameDraw();
+        }
     });
 });
+
+const gameDraw = () =>{
+    msg.innerText = `Game was a Draw`;
+    msgContainer.classList.remove("hide");
+    disableBoxed();
+};
 
 const disableBoxed = () =>{
     for(let box of boxes)
         box.disabled = true;
-}
+};
 
 const enableBoxed = () =>{
     for(let box of boxes){
         box.disabled = false;
         box.innerText = "";
     }
-
-}
+};
 
 const showWinner = (winner) =>{
     msg.innerText = `Congratulations!! The winner is ${winner}`;
@@ -72,6 +86,7 @@ const checkWinner = () =>{
                 {
                     console.log("Winner is", pos1v);
                     showWinner(pos1v);
+                    return true;
                 }
             }
     }
